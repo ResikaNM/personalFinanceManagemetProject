@@ -1,0 +1,27 @@
+<!-- expense_create.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Expense</title>
+</head>
+<body>
+    <h1>Create Expense</h1>
+
+    <form method="post" action="{% url 'create_expense' %}">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="hidden" name="created_by" value="{{ request.user.username }}">
+        <button type="submit">Create Expense</button>
+    </form>
+
+    {% if messages %}
+        <ul class="messages">
+            {% for message in messages %}
+                <li{% if message.tags %} class="{{ message.tags }}"{% endif %}>{{ message }}</li>
+            {% endfor %}
+        </ul>
+    {% endif %}
+</body>
+</html>
