@@ -115,18 +115,16 @@ class ExpenseEditView(View):
     template_name = 'expense_edit.html'
 
     def get(self, request, expense_id):
-        expense = get_object_or_404(Expens, id=expense_id, created_by=request.user)
-        if not request.user.is_staff and expense.created_by != request.user:
-            messages.error(request, 'You do not have permission to edit this expense.')
+        #expense = get_object_or_404(Expens, id=expense_id, created_by=request.user)
+        try:
+            expense = Expens.objects.get(id=expense_id, created_by=request.user)
+        except Expens.DoesNotExist:
             return redirect('view_expenses')
         form = ExpenseForm(instance=expense)
         return render(request, self.template_name, {'form': form, 'expense': expense})
 
     def post(self, request, expense_id):
         expense = get_object_or_404(Expens, id=expense_id, created_by=request.user)
-        if not request.user.is_staff and expense.created_by != request.user:
-            messages.error(request, 'You do not have permission to edit this expense.')
-            return redirect('view_expenses')
         form = ExpenseForm(request.POST, instance=expense)
         if form.is_valid():
             form.save()
